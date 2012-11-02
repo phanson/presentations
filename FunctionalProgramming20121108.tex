@@ -1,0 +1,91 @@
+\documentclass[ignorenonframetext,red]{beamer}
+%\documentclass{article}\usepackage{beamerarticle}
+\usepackage{hyperref}
+
+\mode<article>{\usepackage{fullpage}}
+
+\title{Functional Programming Concepts}
+\author{Philip Hanson}
+\institute{Jibunu LLC}
+\date{November 8, 2012}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\maketitle
+
+\section{Concepts}
+\begin{frame}
+Before diving into examples that use a functional style, let's establish what \textit{functional} means, and examine the core concepts of functional programming.
+\end{frame}%
+As the name implies, functional programming centers around \textit{functions} and their transformations of inputs into outputs. This can be seen in the way that a functional style tends to decompose a given problem.
+
+\subsection{Decomposition Paradigms}
+\begin{frame}
+Programming languages support problem decomposition in several ways:
+\begin{itemize}
+\pause \item procedural (C, Pascal, BASH, Batch)
+\pause \item declarative (SQL)
+\pause \item object-oriented (Smalltalk, C++, Java, C\#)
+\pause \item functional (Scheme, Haskell, ML)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\noindent There are important differences in appearance and functionality when programming in different paradigms.
+\pause
+\begin{block}{Object-Oriented}
+``Objects are little capsules containing some internal state along with a collection of method calls that let you modify this state, and programs consist of making the right set of state changes.''
+\end{block}
+\pause
+\begin{block}{Functional}
+``Functional programming wants to avoid state changes as much as possible and works with data flowing between functions.''
+\end{block}
+\end{frame}
+
+\subsection{Functional Design}
+\begin{frame}
+\noindent Why is functional programming useful?
+\begin{itemize}
+\pause \item Formal provability
+\pause \item Modularity
+\pause \item Composability
+\pause \item Ease of debugging and testing
+\end{itemize}
+\end{frame}
+
+\noindent The above are useful to varying degrees. Formal provability, for example, is a great idea, but trying to prove anything non-trivial involves a lot of work---so it is not very practical. A more practical benefit of functional programming is that it forces you to break your problem into small pieces, resulting in more modular programs.  It’s easier to specify and write (and test!) a small function that does one thing than a large function that performs a complicated transformation.
+
+Debugging is simplified because functions are generally small and clearly specified. When a program doesn’t work, each function is an interface point where you can check that the data are correct. You can look at the intermediate inputs and outputs to quickly isolate the function that’s responsible for a bug.
+
+Testing is easier because each function is a potential subject for a unit test. Functions don’t depend on system state that needs to be replicated before running a test; instead you only have to synthesize the right input and then check that the output matches expectations.
+
+\subsection{Data Flow and Immutability}
+\begin{frame}
+Functional programs are organized around \textit{functions}
+\end{frame}%
+instead of objects.
+\begin{frame}%
+Functions with no side effects are called \textit{pure functions}%
+\end{frame}.
+Some functional programming languages enforce functional purity unless the function is tagged to allow it to be \textit{impure}.
+\begin{frame}%
+Data structures are generally \textit{immutable}. An immutable object has a couple of useful properties:
+\begin{itemize}
+\pause \item objects cannot be changed in-place
+\pause \item any operation that would change some property of an object must create a copy instead
+\end{itemize}
+\end{frame}
+\noindent Because immutable objects cannot change, we can be sure that any reference we hold to an object will remain stable and will always contain the same information. And because pure functions have no side effects, we can guarantee that a given function call won't affect any mutable objects, either.
+
+\begin{frame}{Resources}
+\begin{itemize}
+	\item Python Functional Programming HOWTO\\(\url{http://docs.python.org/3/howto/functional.html})
+	\item Python {\tt functools} Documentation\\(\url{http://docs.python.org/3/library/functools.html})
+\end{itemize}
+\end{frame}
+
+\end{document}

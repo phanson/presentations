@@ -1,9 +1,35 @@
 \documentclass[ignorenonframetext,red]{beamer}
 %\documentclass[ignorenonframetext,red,handout]{beamer}\usepackage{pgfpages}\pgfpagesuselayout{4 on 1}[letterpaper, landscape, border shrink=5mm]
 %\documentclass{article}\usepackage{beamerarticle}
+\usepackage{listings}
 \usepackage{hyperref}
 
 \mode<article>{\usepackage{fullpage}}
+
+% code formatting options
+\lstdefinestyle{numbers}{ %
+  numbers=left, %
+  stepnumber=1, %
+  numberstyle=\small, %
+  numbersep=10pt, %
+  showspaces=false, %
+  showstringspaces=false, %
+  showtabs=false, %
+}
+\lstdefinestyle{python}{ %
+  language=Python, %
+  style=numbers, %
+  keywordstyle=\color{olive}, %
+  commentstyle=\color{red}, %
+  stringstyle=\color{teal}
+}
+\lstdefinestyle{csharp}{ %
+  language=[Sharp]C, %
+  style=numbers, %
+  keywordstyle=\color{blue}, %
+  commentstyle=\color{olive}, %
+  stringstyle=\color{purple}
+}
 
 \title{Functional Programming Concepts}
 \author{Philip Hanson}
@@ -77,12 +103,15 @@ Debugging is simplified because functions are generally small and clearly specif
 
 Testing is easier because each function is a potential subject for a unit test. Functions don’t depend on system state that needs to be replicated before running a test; instead you only have to synthesize the right input and then check that the output matches expectations.
 
-\subsection{Data Flow and Immutability}
+\subsection{First-Class Functions and Immutability}
 \begin{frame}
 Functional programs are organized around \textit{functions}
 \end{frame}%
-instead of objects.
-\begin{frame}%
+instead of objects. In a functional programming language, you can hold a reference to a function---or more generally, a \textit{callable object} that accepts parameters and returns some result.
+
+This implies the existence of some other features you may have heard of, like \textit{anonymous functions}, where the body of a function can be defined without assigning it to a specific name. The ability to work with functions in this way is referred to as making them \textit{first-class}, that is, referenceable. (It also opens the door to \textit{higher-order} functions, which are functions that accept other functions as parameters.)
+
+\begin{frame}
 Functions with no side effects are called \textit{pure functions}%
 \end{frame}.
 Some functional programming languages enforce functional purity unless the function is tagged to allow it to be \textit{impure}.
@@ -102,6 +131,16 @@ Let's examine some distinctive techniques of functional programming using Python
 I've chosen to use Python for these examples because it allows us to write code in a functional style while retaining a familiar, easy-to-read syntax. Note that Python is a \textit{multi-paradigm} language rather than a purely functional language; you can write procedural programs, object-oriented programs, and functional programs all in Python.
 
 \subsection{\tt sorted}
+We have an excellent example of a pure function in the Python standard library, \texttt{sorted()}. The function accepts an \texttt{iterable} and returns a sorted version of that object, leaving the original untouched.
+
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={Sorting a List},label={lst:sorted1}]
+n = [4,8,2,6,5,9,7,1]   # original list
+p = sorted(n)           # sorted copy
+\end{lstlisting}
+\end{frame}
+
+\noindent If we run the code of Listing \ref{lst:sorted1} in a REPL and then examine the variable values, we'll find that \texttt{n} retains its original value, while \texttt{p} contains a sorted version of the same information.
 
 \subsection{\tt filter}
 

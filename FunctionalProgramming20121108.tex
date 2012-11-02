@@ -1,4 +1,5 @@
 \documentclass[ignorenonframetext,red]{beamer}
+%\documentclass[ignorenonframetext,red,handout]{beamer}\usepackage{pgfpages}\pgfpagesuselayout{4 on 1}[letterpaper, landscape, border shrink=5mm]
 %\documentclass{article}\usepackage{beamerarticle}
 \usepackage{hyperref}
 
@@ -9,15 +10,28 @@
 \institute{Jibunu LLC}
 \date{November 8, 2012}
 
+\AtBeginSection[]%
+{
+\begin{frame}<beamer>
+	\tableofcontents[currentsection]
+\end{frame}
+}
+
+\AtBeginSubsection[]%
+{
+\begin{frame}<beamer>
+	\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
 \begin{document}
 
 \begin{frame}
-\titlepage
+\maketitle
 \end{frame}
 
-\maketitle
-
 \section{Concepts}
+
 \begin{frame}
 Before diving into examples that use a functional style, let's establish what \textit{functional} means, and examine the core concepts of functional programming.
 \end{frame}%
@@ -57,7 +71,7 @@ Programming languages support problem decomposition in several ways:
 \end{itemize}
 \end{frame}
 
-\noindent The above are useful to varying degrees. Formal provability, for example, is a great idea, but trying to prove anything non-trivial involves a lot of work---so it is not very practical. A more practical benefit of functional programming is that it forces you to break your problem into small pieces, resulting in more modular programs.  It’s easier to specify and write (and test!) a small function that does one thing than a large function that performs a complicated transformation.
+\noindent The above are useful to varying degrees. Formal provability, for example, is a great idea, but trying to prove anything non-trivial involves a lot of work---so it's not very practical. A more practical benefit of functional programming is that it forces you to break your problem into small pieces, resulting in more modular programs.  It’s easier to specify and write (and test!) a small function that does one thing than a large function that performs a complicated transformation.
 
 Debugging is simplified because functions are generally small and clearly specified. When a program doesn’t work, each function is an interface point where you can check that the data are correct. You can look at the intermediate inputs and outputs to quickly isolate the function that’s responsible for a bug.
 
@@ -80,6 +94,27 @@ Data structures are generally \textit{immutable}. An immutable object has a coup
 \end{itemize}
 \end{frame}
 \noindent Because immutable objects cannot change, we can be sure that any reference we hold to an object will remain stable and will always contain the same information. And because pure functions have no side effects, we can guarantee that a given function call won't affect any mutable objects, either.
+
+\section{Techniques}
+\begin{frame}
+Let's examine some distinctive techniques of functional programming using Python (\url{http://www.python.org}).
+\end{frame}%
+I've chosen to use Python for these examples because it allows us to write code in a functional style while retaining a familiar, easy-to-read syntax. Note that Python is a \textit{multi-paradigm} language rather than a purely functional language; you can write procedural programs, object-oriented programs, and functional programs all in Python.
+
+\subsection{\tt sorted}
+
+\subsection{\tt filter}
+
+\subsection{\tt map}
+
+\subsection{\tt reduce}
+
+\section{Functional Programming in C\#}
+\begin{frame}
+% immutable objects (+ example from survey model code)
+% delegates and anonymous methods
+% our glorious future: C\#4, lambdas, LINQ to objects
+\end{frame}
 
 \begin{frame}{Resources}
 \begin{itemize}

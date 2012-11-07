@@ -131,22 +131,52 @@ Let's examine some distinctive techniques of functional programming using Python
 I've chosen to use Python for these examples because it allows us to write code in a functional style while retaining a familiar, easy-to-read syntax. Note that Python is a \textit{multi-paradigm} language rather than a purely functional language; you can write procedural programs, object-oriented programs, and functional programs all in Python.
 
 \subsection{\tt sorted}
-We have an excellent example of a pure function in the Python standard library, \texttt{sorted()}. The function accepts an \texttt{iterable} and returns a sorted version of that object, leaving the original untouched.
+We have an excellent example of a pure function in the Python standard library, \texttt{sorted}. The function accepts an \texttt{iterable} and returns a sorted version of that object, leaving the original untouched.
 
 \begin{frame}[fragile]
-\begin{lstlisting}[style=python,caption={Sorting a List},label={lst:sorted1}]
+\begin{lstlisting}[style=python,caption={Sorting a List},label={lst:sorted}]
 n = [4,8,2,6,5,9,7,1]   # original list
 p = sorted(n)           # sorted copy
 \end{lstlisting}
 \end{frame}
 
-\noindent If we run the code of Listing \ref{lst:sorted1} in a REPL and then examine the variable values, we'll find that \texttt{n} retains its original value, while \texttt{p} contains a sorted version of the same information.
+\noindent If we run the code of Listing \ref{lst:sorted} in a REPL and then examine the variable values, we'll find that \texttt{n} retains its original value, while \texttt{p} contains a sorted version of the same information.
 
 \subsection{\tt filter}
+This next function shows an example of higher-order functions. As you might expect from the name, \texttt{filter} returns a filtered version of a list. But it does so using a \textit{predicate} function that is passed in along with the list to be filtered.
+
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={Filtering a List},label={lst:filter1}]
+def p(n):  # predicate
+    return n > 3
+
+r = [1,2,3,4,5]
+m = filter(p, r)
+\end{lstlisting}
+
+\begin{lstlisting}[style=python,caption={Anonymous Functions},label={lst:filter2}]
+r = [1,2,3,4,5]
+m = filter(lambda x: x > 3, r)  # anonymous predicate
+\end{lstlisting}
+\end{frame}
+
+Listing \ref{lst:filter1} shows a reference to the function \texttt{p} being passed as a parameter to \texttt{filter}, which returns an enumerable object. This enumerable contains all elements of the original list for which the predicate (in this case, \texttt{p}) returns \texttt{true}. Thus, the iterator \texttt{m} will produce the values \texttt{[4,5]}.
+
+It is not even necessary to hold a reference to the predicate function: Python allows us to define anonymous functions using the \texttt{lambda} keyword. Anonymous functions can be used anywhere that a function reference is required. Listing \ref{lst:filter2} shows the use of an anonymous function in place of \texttt{p} as a parameter for \texttt{filter}.
 
 \subsection{\tt map}
+Filtering is nice (and useful), but often we want to do more with the values in an enumerable, such as \textit{transform} them.
+
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={Doubling Each Element},label={lst:map1}]
+r = [1,2,3,4,5]
+m = map(lambda x: x * 2, r)
+\end{lstlisting}
+\end{frame}
 
 \subsection{\tt reduce}
+
+% also: putting it all together. reduce(x, map(y, filter(z, r)))
 
 \section{Functional Programming in C\#}
 \begin{frame}

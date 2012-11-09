@@ -165,16 +165,36 @@ Listing \ref{lst:filter1} shows a reference to the function \texttt{p} being pas
 It is not even necessary to hold a reference to the predicate function: Python allows us to define anonymous functions using the \texttt{lambda} keyword. Anonymous functions can be used anywhere that a function reference is required. Listing \ref{lst:filter2} shows the use of an anonymous function in place of \texttt{p} as a parameter for \texttt{filter}.
 
 \subsection{\tt map}
-Filtering is nice (and useful), but often we want to do more with the values in an enumerable, such as \textit{transform} them.
+Filtering is nice (and useful), but often we want to do more with the values in an enumerable, such as \textit{transform} them. We can use another higher-order function, \texttt{map}, to apply a given transformation function to every item in a list and return the results in a new enumerable.
 
 \begin{frame}[fragile]
-\begin{lstlisting}[style=python,caption={Doubling Each Element},label={lst:map1}]
+\begin{lstlisting}[style=python,caption={Doubling Each Element},label={lst:map_pure}]
 r = [1,2,3,4,5]
 m = map(lambda x: x * 2, r)
 \end{lstlisting}
 \end{frame}
 
+\noindent After executing the code of Listing \ref{lst:map_pure}, \texttt{m} would contain an enumerable of the values \texttt{[2,4,6,8,10]}. This is purest way to use \texttt{map}, functionally speaking. But there is no requirement that the first argument be a pure function---it will happily execute with an impure function like \texttt{print}!
+
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={\texttt{map} With an Impure Function},label={lst:map_impure}]
+r = [3,2,1,'Liftoff']
+m = map(print, r)
+\end{lstlisting}
+\end{frame}
+
+\begin{lstlisting}[style=python,caption={Output of Listing \ref{lst:map_impure}},label={lst:map_impure_out}]
+3
+2
+1
+Liftoff
+[None, None, None, None]
+\end{lstlisting}
+
+\noindent Executing the code in Listing \ref{lst:map_impure} will print the value of each element in the list when the values of the enumeration \texttt{m} are read. Note that \texttt{m} still contains an enumerable of length 4, as shown on the last line of Listing \ref{lst:map_impure_out}, but the values are useless because \texttt{print} returns void.
+
 \subsection{\tt reduce}
+
 
 % also: putting it all together. reduce(x, map(y, filter(z, r)))
 

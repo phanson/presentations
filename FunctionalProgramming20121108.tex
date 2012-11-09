@@ -1,6 +1,6 @@
-\documentclass[ignorenonframetext,red]{beamer}
+%\documentclass[ignorenonframetext,red]{beamer}
 %\documentclass[ignorenonframetext,red,handout]{beamer}\usepackage{pgfpages}\pgfpagesuselayout{4 on 1}[letterpaper, landscape, border shrink=5mm]
-%\documentclass{article}\usepackage{beamerarticle}
+\documentclass{article}\usepackage{beamerarticle}
 \usepackage{listings}
 \usepackage{hyperref}
 
@@ -183,7 +183,7 @@ m = map(print, r)
 \end{lstlisting}
 \end{frame}
 
-\begin{lstlisting}[style=python,caption={Output of Listing \ref{lst:map_impure}},label={lst:map_impure_out}]
+\begin{lstlisting}[caption={Output of Listing \ref{lst:map_impure}},label={lst:map_impure_out}]
 3
 2
 1
@@ -194,7 +194,44 @@ Liftoff
 \noindent Executing the code in Listing \ref{lst:map_impure} will print the value of each element in the list when the values of the enumeration \texttt{m} are read. Note that \texttt{m} still contains an enumerable of length 4, as shown on the last line of Listing \ref{lst:map_impure_out}, but the values are useless because \texttt{print} returns void.
 
 \subsection{\tt reduce}
+The final operation we might want to perform on a data set is to aggregate it. Perhaps the most familiar aggregation function is \texttt{sum}, which performs repeated addition on subsequent elements of a list.
 
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={List Multiplication},label={lst:reduce_mult}]
+from functools import reduce
+r = [5,6,7,8]
+reduce(lambda a,b: a*b, r)
+\end{lstlisting}
+\end{frame}
+
+\noindent The result of Listing \ref{lst:reduce_mult} is 1680, which is equal to $5 * 6 * 7 * 8$. Note that \texttt{reduce} also has an optional third argument, which is the initial value of the accumulator. If the third argument to \texttt{reduce} is not supplied, the first value of the list is used as the initial value of the accumulator.
+
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={Convert to Dictionary},label={lst:reduce_dict}]
+from functools import reduce
+def da(a,b):
+    a[b[0]] = b[1]
+    return a
+
+x = [('a', 1), ('b', 2), ('c', 3)]
+y = functools.reduce(acd, x, {})
+\end{lstlisting}
+\end{frame}
+
+\noindent After executing the code in Listing \ref{lst:reduce_dict}, the dictionary \texttt{y} will contain the values \texttt{\{'a':1, 'c':3, 'b':2\}}.
+
+\subsection{Partial Function Application and Composition}
+Partial function application, also known as \textit{currying}, is the technique of transforming a function that takes $n$ arguments into a function that takes $m$ arguments, where $m < n$, by providing $n-m$ arguments.\footnote{More correctly, it is the technique of transforming a function of $n$ arguments into a chain of $n-1$ functions of $1$ argument.} Using partial function application, we can use \texttt{reduce} to give a name to our list-multiplication function from Listing \ref{lst:reduce_mult}:
+
+\begin{frame}
+\begin{lstlisting}[style=python,caption={List Multiplication},label={lst:partial_mult}]
+from functools import reduce, partial
+mult = partial(reduce, lambda a,b: a*b)
+mult([5,6,7,8])
+\end{lstlisting}
+\end{frame}
+
+\noindent Again, the result of Listing \ref{lst:partial_mult} is the integer 1680, as expected.
 
 % also: putting it all together. reduce(x, map(y, filter(z, r)))
 
@@ -205,7 +242,9 @@ Liftoff
 % our glorious future: C\#4, lambdas, LINQ to objects
 \end{frame}
 
-\begin{frame}{Resources}
+\section*{Resources}
+\begin{frame}
+\mode<beamer>{\frametitle{\secname}}
 \begin{itemize}
 	\item Python Functional Programming HOWTO\\(\url{http://docs.python.org/3/howto/functional.html})
 	\item Python {\tt functools} Documentation\\(\url{http://docs.python.org/3/library/functools.html})

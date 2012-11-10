@@ -1,6 +1,6 @@
-%\documentclass[ignorenonframetext,red]{beamer}
+\documentclass[ignorenonframetext,red]{beamer}
 %\documentclass[ignorenonframetext,red,handout]{beamer}\usepackage{pgfpages}\pgfpagesuselayout{4 on 1}[letterpaper, landscape, border shrink=5mm]
-\documentclass{article}\usepackage{beamerarticle}
+%\documentclass{article}\usepackage{beamerarticle}
 \usepackage{listings}
 \usepackage{hyperref}
 
@@ -221,9 +221,9 @@ y = functools.reduce(acd, x, {})
 \noindent After executing the code in Listing \ref{lst:reduce_dict}, the dictionary \texttt{y} will contain the values \texttt{\{'a':1, 'c':3, 'b':2\}}.
 
 \subsection{Partial Function Application and Composition}
-Partial function application, also known as \textit{currying}, is the technique of transforming a function that takes $n$ arguments into a function that takes $m$ arguments, where $m < n$, by providing $n-m$ arguments.\footnote{More correctly, it is the technique of transforming a function of $n$ arguments into a chain of $n-1$ functions of $1$ argument.} Using partial function application, we can use \texttt{reduce} to give a name to our list-multiplication function from Listing \ref{lst:reduce_mult}:
+Partial function application, also known as \textit{currying}, is the technique of transforming a function that takes $n$ arguments into a function that takes $m$ arguments, where $m < n$, by providing $n-m$ arguments.\footnote{More correctly, it is the technique of transforming a function of $n$ arguments into a chain of $n$ functions of $1$ argument.} Using partial function application, we can use \texttt{reduce} to give a name to our list-multiplication function from Listing \ref{lst:reduce_mult}:
 
-\begin{frame}
+\begin{frame}[fragile]
 \begin{lstlisting}[style=python,caption={List Multiplication},label={lst:partial_mult}]
 from functools import reduce, partial
 mult = partial(reduce, lambda a,b: a*b)
@@ -231,16 +231,27 @@ mult([5,6,7,8])
 \end{lstlisting}
 \end{frame}
 
-\noindent Again, the result of Listing \ref{lst:partial_mult} is the integer 1680, as expected.
+\noindent Again, the result of Listing \ref{lst:partial_mult} is the integer 1680, as expected. The first argument of \texttt{reduce} is stored for later using a \textit{closure}. Closures are beyond the scope of this treatment, but they're a very useful concept and merit further reading if you're interested in the mechanics of how arguments are saved in the process of currying.
 
 % also: putting it all together. reduce(x, map(y, filter(z, r)))
+\begin{frame}[fragile]
+\begin{lstlisting}[style=python,caption={Function Composition},label={lst:composition}]
+from functools import reduce
+r = [1,2,3,4,5,6]
+f = lambda x: x > 3
+m = lambda x: x / 2
+d = lambda a, b: a * b
+reduce(d, map(m, filter(f, r)))
+\end{lstlisting}
+\end{frame}
+
+\noindent Listing \ref{lst:composition} produces a result of $15.0$, or the product of the halves of all the values in the original list greater than three. This is simple (explicit) function composition and not proper function compositiion. While the \texttt{functional} module does contain a \texttt{compose} function, it is very limited compared to the facilities available in functional languages, and C\# doesn't include any facility for proper function composition at all, so we won't cover it. Explicit function composition is very useful, though, so remember to use it!
 
 \section{Functional Programming in C\#}
-\begin{frame}
-% immutable objects (+ example from survey model code)
-% delegates and anonymous methods
-% our glorious future: C\#4, lambdas, LINQ to objects
-\end{frame}
+\subsection{Immutable Objects}
+\subsection{Delegates and Anonymous Methods}
+\subsection{C\# 4, Lambdas, LINQ to Objects}
+\subsection{Techniques in C\#}
 
 \section*{Resources}
 \begin{frame}

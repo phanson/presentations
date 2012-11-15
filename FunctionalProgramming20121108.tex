@@ -1,6 +1,6 @@
-\documentclass[ignorenonframetext,red]{beamer}
+%\documentclass[ignorenonframetext,red]{beamer}
 %\documentclass[ignorenonframetext,red,handout]{beamer}\usepackage{pgfpages}\pgfpagesuselayout{4 on 1}[letterpaper, landscape, border shrink=5mm]
-%\documentclass{article}\usepackage{beamerarticle}
+\documentclass{article}\usepackage{beamerarticle}
 \usepackage{listings}
 \usepackage{hyperref}
 
@@ -214,7 +214,7 @@ def da(a,b):
     return a
 
 x = [('a', 1), ('b', 2), ('c', 3)]
-y = functools.reduce(acd, x, {})
+y = functools.reduce(da, x, {})
 \end{lstlisting}
 \end{frame}
 
@@ -233,7 +233,6 @@ mult([5,6,7,8])
 
 \noindent Again, the result of Listing \ref{lst:partial_mult} is the integer 1680, as expected. The first argument of \texttt{reduce} is stored for later using a \textit{closure}. Closures are beyond the scope of this treatment, but they're a very useful concept and merit further reading if you're interested in the mechanics of how arguments are saved in the process of currying.
 
-% also: putting it all together. reduce(x, map(y, filter(z, r)))
 \begin{frame}[fragile]
 \begin{lstlisting}[style=python,caption={Function Composition},label={lst:composition}]
 from functools import reduce
@@ -248,17 +247,72 @@ reduce(d, map(m, filter(f, r)))
 \noindent Listing \ref{lst:composition} produces a result of $15.0$, or the product of the halves of all the values in the original list greater than three. This is simple (explicit) function composition and not proper function compositiion. While the \texttt{functional} module does contain a \texttt{compose} function, it is very limited compared to the facilities available in functional languages, and C\# doesn't include any facility for proper function composition at all, so we won't cover it. Explicit function composition is very useful, though, so remember to use it!
 
 \section{Functional Programming in C\#}
+Like Python,%
+\begin{frame}
+C\# is a \textit{multi-paradigm} programming language%
+\end{frame}.
+You are probably used to using it as a procedural or object-oriented language, but there are many opportunities for using a functional style, even in the standard library. Let's look at several of the tools at our disposal and then run through some analogs to \texttt{filter}, \texttt{map}, and \texttt{reduce} as they exist in C\#.
+
 \subsection{Immutable Objects}
-\subsection{Delegates and Anonymous Methods}
-\subsection{C\# 4, Lambdas, LINQ to Objects}
+Objects are mutable by default in C\#. When you make a property public and give it a getter and a setter, any code that holds a reference to that object can modify it. However, we have the tools to make objects immutable by restricting all properties to use only getters and making all fields private. This will prevent unintentional modifications to our objects.
+
+\subsection{Anonymous Methods}
+C\# provides a way for us to define methods inline and use them as anonymous functions. In C\# 2, this is possible using the \texttt{delegate} syntax:
+
+\begin{lstlisting}[style=csharp,caption={Delegate Syntax},label={lst:delegate}]
+addresses.FindAll(delegate(Address d) { return d.Number > 150; });
+\end{lstlisting}
+
+When using delegates, the type of each argument must be specified, and the method body must contain a return statement if a return value is expected. C\# 4 introduced the \textit{lambda}\footnote{A term derived from the \textit{lambda calculus}: \url{http://enwp.org/Lambda_Calculus}} syntax (\texttt{=>}), which is more flexible:
+
+\begin{lstlisting}[style=csharp,caption={Delegate Syntax},label={lst:lambda}]
+addresses.FindAll(d => d.Number > 150);
+\end{lstlisting}
+
+Where the return value is the value of the expression body implicitly. This is very convenient for typing; however, it means that an anonymous method defined using the lambda syntax \textit{must} return a value. Most of the time that is the desired behavior anyway, but you should be aware of the limitations.
+
 \subsection{Techniques in C\#}
+Now let's compare the \texttt{filter}, \texttt{map}, and \texttt{reduce} equivalents in C\#. With the introduction of the lambda syntax and the LINQ libraries in version 4, these actions can be accomplished more easily than in previous versions. The table below shows the equivalent list operation for version 2 and version 4:
+
+\begin{frame}
+\begin{center}
+\begin{tabular}{l|c|c}
+ & C\# 2 & C\# 4 \\
+\hline
+\texttt{filter} & \texttt{.FindAll()} & \texttt{.Where()} \\
+\texttt{map} & \texttt{.ConvertAll()} & \texttt{.Select()} \\
+\texttt{reduce} & \texttt{for} loop :( & \texttt{.Aggregate()}
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{lstlisting}[style=csharp,caption={Filter in C\#},label={lst:csharp_filter}]
+addresses.FindAll(delegate(Address d) { return d.Number > 150; });  // C# 2
+addresses.FindAll(d => d.Number > 150);                             // C# 4
+\end{lstlisting}
+
+\begin{lstlisting}[style=csharp,caption={Map in C\#},label={lst:csharp_map}]
+addresses.ConvertAll<string>(
+          delegate(Address d) { return d.City + " " + d.State; });  // C# 2
+addresses.Select(d => d.City + " " + d.State);                      // C# 4
+\end{lstlisting}
+
+\begin{lstlisting}[style=csharp,caption={Reduce in C\#},label={lst:csharp_reduce}]
+int n = 0;
+foreach(Address d in addresses)                  // C# 2
+    n += d.Number;
+
+addresses.Aggregate(0, (a, b) => a + b.Number);  // C# 4
+\end{lstlisting}
 
 \section*{Resources}
 \begin{frame}
 \mode<beamer>{\frametitle{\secname}}
 \begin{itemize}
-	\item Python Functional Programming HOWTO\\(\url{http://docs.python.org/3/howto/functional.html})
-	\item Python {\tt functools} Documentation\\(\url{http://docs.python.org/3/library/functools.html})
+	\item Python Functional Programming HOWTO\\ (\url{http://docs.python.org/3/howto/functional.html})
+	\item Python {\tt functools} Documentation\\ (\url{http://docs.python.org/3/library/functools.html})
+	\item Lambda Expressions on MSDN\\ (\url{http://msdn.microsoft.com/en-us/library/bb397687.aspx})
+	\item LINQ to Objects on MSDN\\ (\url{http://msdn.microsoft.com/en-us/library/bb397919.aspx})
 \end{itemize}
 \end{frame}
 

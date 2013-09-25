@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# run pdfLaTeX on the given file
+# place temp files in build/ and
+# output files in out/
+
+filename=$(basename "$1")
+filename="${filename%.*}"
+
+pdflatex --output-directory=build $1
+cp "build/${filename}.pdf" out/
